@@ -1,3 +1,0 @@
-#!/bin/sh
-CODE_LOADING_MODE="${CODE_LOADING_MODE:-interactive}"
-export CODE_LOADING_MODE
