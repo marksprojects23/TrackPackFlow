@@ -88,12 +88,20 @@ init([]) ->
                                   {noreply, term(), integer()} |
                                   {stop, term(), term(), integer()} | 
                                   {stop, term(), term()}.
-handle_call({friends_for,Name_key,Friends_value}, _From, Db_PID) ->
-        case Name_key =:= <<"">> of
+handle_call({storing_package,Package_id,Location_id}, _From, Db_PID) ->
+        case Package_id =:= <<"">> of
             true ->
                 {reply,{fail,empty_key},Db_PID};
             _ ->
-                {reply,db_api:put_friends_for(Name_key,Friends_value,Db_PID),Db_PID}
+                {reply,data_service:store_package(Package_id,Location_id,Db_PID),Db_PID}
+        end;
+
+handle_call({getting_location,Package_id,Location_id}, _From, Db_PID) ->
+        case Package_id =:= <<"">> of
+            true ->
+                {reply,{fail,empty_key},Db_PID};
+            _ ->
+                {reply,data_service:get_location(Package_id,Db_PID),Db_PID}
         end;
 handle_call(stop, _From, _State) ->
         {stop,normal,
@@ -110,8 +118,12 @@ handle_call(stop, _From, _State) ->
 -spec handle_cast(Msg::term(), State::term()) -> {noreply, term()} |
                                   {noreply, term(), integer()} |
                                   {stop, term(), term()}.
+
 handle_cast(_Msg, State) ->
     {noreply, State}.
+
+handle_cast({updating_location, Args}, State) -> 
+    {}
     
 %%--------------------------------------------------------------------
 %% @private
@@ -166,21 +178,22 @@ code_change(_OldVsn, State, _Extra) ->
 silly_test_() ->
     {setup,
      fun() -> %this setup fun is run once befor the tests are run. If you want setup and teardown to run for each test, change {setup to {foreach
-        meck:new(db_api),
-        meck:expect(db_api, put_friends_for, fun(Key,Names,PID) -> worked end)
-        
+        meck:new(data_service),
+        meck:expect(data_service, storing_package, fun(Package_id,Location_id,Pid) -> worked end)
+        meck:expect(data_service, updating_location, fun(Location_id,Coords,Pid) -> worked end)
+        meck:expect(data_service, getting_location, fun(Package_id,Pid) -> worked end)
      end,
      fun(_) ->%This is the teardown fun. Notice it takes one, ignored in this example, parameter.
-        meck:unload(db_api)
+        meck:unload(db_service)
      end,
     [%This is the list of tests to be generated and run.
         ?_assertEqual({reply,worked,some_Db_PID},
-                            silly_mock:handle_call({friends_for,<<"sally">>,[]}, some_from_pid, some_Db_PID)),
+                            tpp_mock:handle_call({storing_package,<<"550e8400-e29b-41d4-a716-446655440000">>,[]}, some_from_pid, some_Db_PID)),
         ?_assertEqual({reply,worked,some_Db_PID},
-                            silly_mock:handle_call({friends_for,<<"fred">>,[<<"sue">>,<<"joe">>]}, some_from_pid, some_Db_PID)
+                            tpp_mock:handle_call({friends_for,<<"fred">>,[<<"sue">>,<<"joe">>]}, some_from_pid, some_Db_PID)
                                 ),
         ?_assertEqual({reply,{fail,empty_key},some_Db_PID},
-                            silly_mock:handle_call({friends_for,<<"">>,[]}, some_from_pid, some_Db_PID))
+                            tpp_mock:handle_call({friends_for,<<"">>,[]}, some_from_pid, some_Db_PID))
     ]}.
     
 -endif.
