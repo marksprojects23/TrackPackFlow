@@ -3,12 +3,18 @@
 -export([store_package/3, update_location/3, get_location/2]).
 
 
-store_package(Package_id, Location_id, Pid) ->
-    Object = riakc_obj:new(<<"packages">>, list_to_binary(Package_id), list_to_binary(Location_id)),
+store_package(string(Package_id), Pid) ->
+    Object = riakc_obj:new(<<"packages">>, list_to_binary(Package_id), 0),
     riack_pb_socket:put(Pid, Object).
+store_package(PackageLocation_map, Pid) ->
+    Package_id = maps:get("Package_id",PackageLocation_map),
+    Location_id = maps:get("Location_id",PackageLocation_map),
+    Object = riakc_obj:new(<<"packages">>, list_to_binary(Package_id), list_to_binary(Location_id)),
+    riack_pb_socket:put(Pid, Object);
 
 
-update_location(Location_id, Coords, Pid) ->
+update_location(LocationCoord_map, Pid) ->
+    {Location_id,Coords} = maps:take("Location_id", LocationCoord_map),
     Object = riakc_obj:new(<<"locations">>, list_to_binary(Location_id), term_to_binary(Coords)),
     riak_pb_socket:put(Pid, Object).
 

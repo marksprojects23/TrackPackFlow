@@ -1,3 +1,3 @@
-% Might actually be the real RabbitMQ Module
+% Mocking our logging system
 -module(logger).
 -export([]).

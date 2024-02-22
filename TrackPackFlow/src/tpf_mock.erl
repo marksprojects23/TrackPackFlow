@@ -6,7 +6,7 @@
 %%        Creative Commons Attribution 4.0 International License</a>
 %%
 %%
--module(tpp_mock).
+-module(tpf_mock).
 -behaviour(gen_server).
 
 
@@ -88,15 +88,15 @@ init([]) ->
                                   {noreply, term(), integer()} |
                                   {stop, term(), term(), integer()} | 
                                   {stop, term(), term()}.
-handle_call({storing_package,Package_id,Location_id}, _From, Db_PID) ->
-        case Package_id =:= <<"">> of
+handle_call({storing_package,PackageLocation_map}, _From, Db_PID) ->
+        case PackageLocation_map =:= <<"">> of
             true ->
                 {reply,{fail,empty_key},Db_PID};
             _ ->
-                {reply,data_service:store_package(Package_id,Location_id,Db_PID),Db_PID}
+                {reply,data_service:store_package(PackageLocation_map,Db_PID),Db_PID}
         end;
 
-handle_call({getting_location,Package_id,Location_id}, _From, Db_PID) ->
+handle_call({getting_location,Package_id}, _From, Db_PID) ->
         case Package_id =:= <<"">> of
             true ->
                 {reply,{fail,empty_key},Db_PID};
@@ -118,12 +118,12 @@ handle_call(stop, _From, _State) ->
 -spec handle_cast(Msg::term(), State::term()) -> {noreply, term()} |
                                   {noreply, term(), integer()} |
                                   {stop, term(), term()}.
-
 handle_cast(_Msg, State) ->
     {noreply, State}.
 
-handle_cast({updating_location, Args}, State) -> 
-    {}
+handle_cast({updating_location, Data, Pid}, State) -> 
+    data_service:update_location(Data, Pid),
+    {noreply, State}.
     
 %%--------------------------------------------------------------------
 %% @private
@@ -175,25 +175,37 @@ code_change(_OldVsn, State, _Extra) ->
 -include_lib("eunit/include/eunit.hrl").
 
 
-silly_test_() ->
+tpf_test_() ->
     {setup,
      fun() -> %this setup fun is run once befor the tests are run. If you want setup and teardown to run for each test, change {setup to {foreach
         meck:new(data_service),
-        meck:expect(data_service, storing_package, fun(Package_id,Location_id,Pid) -> worked end)
-        meck:expect(data_service, updating_location, fun(Location_id,Coords,Pid) -> worked end)
-        meck:expect(data_service, getting_location, fun(Package_id,Pid) -> worked end)
+        meck:expect(data_service, storing_package, fun(PackageLocation_map,Pid) -> worked end)
+        meck:expect(data_service, updating_location, fun(LocationCoord_map,Pid) -> worked end)
+        meck:expect(data_service, getting_location, fun(Package_id,Pid) -> worked end),
+
+        %Mock Logging
+        meck:new(logger, [passthrough]),
+        meck:expect(logger, info, fun(Msg) -> io:format("Mocked logger info: ~p~n", [Msg]) end),
+        meck:expect(logger, error, fun(Msg) -> io:format("Mocked logger error: ~p~n", [Msg]) end),
      end,
      fun(_) ->%This is the teardown fun. Notice it takes one, ignored in this example, parameter.
         meck:unload(db_service)
+       %meck:unload(logger)
      end,
     [%This is the list of tests to be generated and run.
-        ?_assertEqual({reply,worked,some_Db_PID},
-                            tpp_mock:handle_call({storing_package,<<"550e8400-e29b-41d4-a716-446655440000">>,[]}, some_from_pid, some_Db_PID)),
-        ?_assertEqual({reply,worked,some_Db_PID},
-                            tpp_mock:handle_call({friends_for,<<"fred">>,[<<"sue">>,<<"joe">>]}, some_from_pid, some_Db_PID)
+        ?_assertEqual({reply,worked,some_Db_PID},   % Putting package in facility
+                            tpp_mock:handle_call({storing_package, #{package_id => "5d5ced29-c984-4d9d-9a0d-b77d4f53210b", location_id => "Warehouse13"}}, some_from_pid, some_Db_PID)),
+        ?_assertEqual({reply,worked,some_Db_PID},   % Delivering package
+                            tpp_mock:handle_call({storing_package, "5d5ced29-c984-4d9d-9a0d-b77d4f53210b"}, some_from_pid, some_Db_PID)
                                 ),
-        ?_assertEqual({reply,{fail,empty_key},some_Db_PID},
-                            tpp_mock:handle_call({friends_for,<<"">>,[]}, some_from_pid, some_Db_PID))
+        ?_assertEqual({noreply,worked,some_Db_PID}, % Updating coords of a transit vehicle
+                            tpp_mock:handle_cast({updating_location, #{location_id => "Truck2", latitude => 40.741895, longitude => -73.989308}}, some_from_pid, some_Db_PID)
+                                ),
+        ?_assertEqual({reply,worked,some_Db_PID},   % Customer requests package location coords
+                            tpp_mock:handle_call({getting_location, "5d5ced29-c984-4d9d-9a0d-b77d4f53210b"}, some_from_pid, some_Db_PID)
+                                ),                        
+        ?_assertEqual({reply,{fail,empty_key},some_Db_PID}, % Fail test
+                            tpp_mock:handle_call({storing_package, <<"">>}, some_from_pid, some_Db_PID))
     ]}.
     
 -endif.
