@@ -1,3 +1,7 @@
 % Mocking our logging system
 -module(logger).
--export([]).
+-export([log/1]).
+
+
+log(Msg) ->
+    io:format(Msg).

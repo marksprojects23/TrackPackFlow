@@ -1,22 +1,23 @@
 -module(data_service).
 
--export([store_package/3, update_location/3, get_location/2]).
+-export([store_package/2, update_location/2, get_location/2]).
 
-
-store_package(string(Package_id), Pid) ->
-    Object = riakc_obj:new(<<"packages">>, list_to_binary(Package_id), 0),
-    riack_pb_socket:put(Pid, Object).
-store_package(PackageLocation_map, Pid) ->
+store_package("", _Pid)->
+    {fail,empty_key};
+store_package(PackageLocation_map, Pid) when is_map(PackageLocation_map)->
     Package_id = maps:get("Package_id",PackageLocation_map),
     Location_id = maps:get("Location_id",PackageLocation_map),
     Object = riakc_obj:new(<<"packages">>, list_to_binary(Package_id), list_to_binary(Location_id)),
-    riack_pb_socket:put(Pid, Object);
+    riakc_pb_socket:put(Pid, Object);
+store_package(Package_id, Pid)->
+    Object = riakc_obj:new(<<"packages">>, list_to_binary(Package_id), 0),
+    riakc_pb_socket:put(Pid, Object).
 
 
 update_location(LocationCoord_map, Pid) ->
     {Location_id,Coords} = maps:take("Location_id", LocationCoord_map),
     Object = riakc_obj:new(<<"locations">>, list_to_binary(Location_id), term_to_binary(Coords)),
-    riak_pb_socket:put(Pid, Object).
+    riakc_pb_socket:put(Pid, Object).
 
 
 get_location(Package_id, Pid) ->
