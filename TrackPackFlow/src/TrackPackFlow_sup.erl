@@ -3,7 +3,7 @@
 %% @end
 %%%-------------------------------------------------------------------
 
--module(TrackPackFlow_sup).
+-module(trackpackflow_sup).
 
 -behaviour(supervisor).
 
