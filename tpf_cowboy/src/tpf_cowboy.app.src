@@ -5,7 +5,7 @@
   {mod, {tpf_cowboy_app, []}},
   {applications,
    [kernel,
-    stdlib
+    stdlib,
     ranch,
     cowboy,
     ssl
