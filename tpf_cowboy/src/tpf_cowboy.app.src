@@ -6,6 +6,9 @@
   {applications,
    [kernel,
     stdlib
+    ranch,
+    cowboy,
+    ssl
    ]},
   {env,[]},
   {modules, []},
