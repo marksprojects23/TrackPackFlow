@@ -19,7 +19,7 @@ store_package(Package_id, _, Pid) when is_pid(Pid), is_list(Package_id), length(
 store_package(_, _, Pid) when is_pid(Pid)->
     {fail, isnt_string};
 store_package(_, _, _Pid)->
-    io:format({fail, no_pid}),
+    io:format("{fail, no_pid}~n"),
     {fail, no_pid}.
 
 
