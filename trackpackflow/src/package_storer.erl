@@ -6,7 +6,7 @@
 %%        Creative Commons Attribution 4.0 International License</a>
 %%
 %%
--module(tpf_mock).
+-module(package_storer).
 -behaviour(gen_server).
 
 
