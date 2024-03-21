@@ -11,7 +11,7 @@
 
 start(_StartType, _StartArgs) ->
     trackpackflow_sup:start_link(),
-    {ok, _Pid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087),
+    %{ok, _Pid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087),
     package_storer:start().
 
 stop(_State) ->
