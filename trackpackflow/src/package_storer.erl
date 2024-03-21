@@ -95,8 +95,8 @@ handle_call({storing_package, Package_id, Location_id}, _From, Db_PID) ->
             true ->
                 {reply,{fail,empty_key},Db_PID};
             _ ->
-                % {reply,data_service:store_package(Package_id, Location_id, Db_PID),Db_PID}
-                {reply,{ok,Package_id,Location_id},Db_PID}
+                {reply,data_service:store_package(Package_id, Location_id, Db_PID),Db_PID}
+                %{reply,{ok,Package_id,Location_id},Db_PID}
         end;
 
 handle_call({delivering_package,Package_id}, _From, Db_PID) ->
