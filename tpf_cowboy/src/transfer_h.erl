@@ -13,17 +13,19 @@ init(Req, State) ->
     Decoded_req_body_map = jiffy:decode(Req_body, [return_maps]),
     {ok, Location_id} = maps:find(<<"location_id">>, Decoded_req_body_map),
     {ok, Package_id} = maps:find(<<"package_id">>, Decoded_req_body_map),
-    (fun(Package_id) ->
+    Test = fun(A) ->
         if
-            is_atom(Package_id) -> 
-                io:format("Package_id is an atom~n");
-            is_binary(Package_id) ->
-                io:format("Package_id is a binary~n");
-            is_list(Package_id) ->
-                io:format("Package_id is a list (possibly a string)~n");
+            is_atom(A) -> 
+                io:format("An atom was passed~n");
+            is_binary(A) ->
+                io:format("A binary was passed~n");
+            is_list(A) ->
+                io:format("A list was passed (possibly a string)~n");
             true -> 
-                io:format("Package_id is of another type~n")
-end end)(Package_id),
+                io:format("Whatever passed is of another type~n")
+end end,
+    Test(Package_id),
+    Test(Location_id),
     io:format(Package_id),
     io:format("~n"),
     io:format(Location_id),
