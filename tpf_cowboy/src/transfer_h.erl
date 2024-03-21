@@ -24,8 +24,10 @@ init(Req, State) ->
             true -> 
                 io:format("Package_id is of another type~n")
 end end)(Package_id),
-    io:format(Package_id,"~n"),
-    io:format(Location_id,"~n"),
+    io:format(Package_id),
+    io:format("~n"),
+    io:format(Location_id),
+    io:format("~n"),
     SelfPid = self(),
     erpc:call('storer@business.tpf.markcuizon.com', gen_server, call, [{global, realstorer}, {storing_package, Package_id, Location_id}, infinity]),
     % erpc:call({realstorer, 'storer@business.tpf.markcuizon.com'}, data_service, store_package, [Package_id, Location_id, SelfPid]),
