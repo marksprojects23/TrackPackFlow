@@ -1,7 +1,7 @@
 
 -module(rabbitmq_module).
 -export([start_link/0, send_message/1]).
--include_lib("amqp_client/include/amqp_client.hrl").
+% -include_lib("amqp_client/include/amqp_client.hrl").
 
 
 %% Starting the RabbitMQ module
