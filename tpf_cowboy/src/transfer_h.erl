@@ -15,7 +15,7 @@ init(Req, State) ->
     {ok, Package_id} = maps:find(<<"package_id">>, Decoded_req_body_map),
     io:format(Package_id),
     SelfPid = self(),
-    A = erpc:call('storer@business.tpf.markcuizon.com', gen_server, call, [realstorer, 'storer@business.tpf.markcuizon.com', [{storing_package, Package_id, Location_id}, SelfPid, SelfPid]]),
+    A = erpc:call('storer@business.tpf.markcuizon.com', gen_server, call, [{global, realstorer}, {storing_package, Package_id, Location_id}, infinity]),
     % erpc:call({realstorer, 'storer@business.tpf.markcuizon.com'}, data_service, store_package, [Package_id, Location_id, SelfPid]),
     io:format(A),
     % erpc:call('package_request@business.tpf.markcuizon.com', package_storer, handle_call, {storing_package, Package_id, Location_id}),
