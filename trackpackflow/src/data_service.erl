@@ -2,7 +2,7 @@
 
 -export([store_package/3, update_location/3, get_location/2, delivered_package/2]).
 
-store_package(Package_id, Location_id, Pid) when length(Package_id) >= 36->
+store_package(Package_id, Location_id, Pid) when is_pid(Pid)->
     % Package_id = maps:get("Package_id",PackageLocation_map),
     % Location_id = maps:get("Location_id",PackageLocation_map),
     Object = riakc_obj:new(<<"packages">>, Package_id, Location_id),
