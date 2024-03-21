@@ -15,9 +15,9 @@ init(Req, State) ->
     {ok, Package_id} = maps:find(<<"package_id">>, Decoded_req_body_map),
     io:format(Package_id),
     SelfPid = self(),
-    A = erpc:call('storer@business.tpf.markcuizon.com', gen_server, call, [{global, realstorer}, {storing_package, Package_id, Location_id}, infinity]),
+    erpc:call('storer@business.tpf.markcuizon.com', gen_server, call, [{global, realstorer}, [{storing_package, Package_id, Location_id}, SelfPid, SelfPid], infinity]),
     % erpc:call({realstorer, 'storer@business.tpf.markcuizon.com'}, data_service, store_package, [Package_id, Location_id, SelfPid]),
-    io:format(A),
+    %io:format(A),
     % erpc:call('package_request@business.tpf.markcuizon.com', package_storer, handle_call, {storing_package, Package_id, Location_id}),
     Req2 = cowboy_req:reply(200, #{}, <<"Transfer_req">>, Req),
     {ok, Req2, State}.
