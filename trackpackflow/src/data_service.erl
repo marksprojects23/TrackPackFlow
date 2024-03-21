@@ -16,8 +16,8 @@ store_package(_, "", Pid) when is_pid(Pid)->
     {fail, empty_location};
 store_package(Package_id, _, Pid) when is_pid(Pid), is_list(Package_id), length(Package_id) < 36->
      {fail, package_isnt_UUID};
-store_package(_, _, Pid) when is_pid(Pid)->
-    {fail, isnt_string};
+% store_package(_, _, Pid) when is_pid(Pid)->
+%     {fail, isnt_string};
 store_package(_, _, _Pid)->
     io:format("{fail, no_pid}~n"),
     {fail, no_pid}.
