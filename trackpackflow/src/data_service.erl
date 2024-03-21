@@ -2,10 +2,10 @@
 
 -export([store_package/3, update_location/3, get_location/2, delivered_package/2]).
 
-store_package(Package_id, Location_id, Pid) when is_list(Package_id), is_list(Location_id), is_pid(Pid), length(Package_id) >= 36->
+store_package(Package_id, Location_id, Pid) when is_pid(Pid), length(Package_id) >= 36->
     % Package_id = maps:get("Package_id",PackageLocation_map),
     % Location_id = maps:get("Location_id",PackageLocation_map),
-    Object = riakc_obj:new(<<"packages">>, list_to_binary(Package_id), list_to_binary(Location_id)),
+    Object = riakc_obj:new(<<"packages">>, Package_id, Location_id),
     riakc_pb_socket:put(Pid, Object);
 % store_package(Package_id, Pid) when is_list(Package_id), is_pid(Pid), length(Package_id) >= 36->
 %     Object = riakc_obj:new(<<"packages">>, list_to_binary(Package_id), 0),
