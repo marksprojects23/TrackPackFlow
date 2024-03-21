@@ -16,18 +16,18 @@ init(Req, State) ->
     Test = fun(A) ->
         if
             is_atom(A) -> 
-                io:format("An atom was passed~n");
+                io:format("An atom was passed:~n");
             is_binary(A) ->
-                io:format("A binary was passed~n");
+                io:format("A binary was passed:~n");
             is_list(A) ->
-                io:format("A list was passed (possibly a string)~n");
+                io:format("A list was passed (possibly a string):~n");
             true -> 
-                io:format("Whatever passed is of another type~n")
+                io:format("Whatever passed is of another type:~n")
 end end,
     Test(Package_id),
-    Test(Location_id),
     io:format(Package_id),
     io:format("~n"),
+    Test(Location_id),
     io:format(Location_id),
     io:format("~n"),
     SelfPid = self(),
