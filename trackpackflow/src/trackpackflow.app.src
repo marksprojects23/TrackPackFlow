@@ -5,8 +5,8 @@
   {mod, {trackpackflow_app, []}},
   {applications,
    [kernel,
-    stdlib,
-    cowboy
+    stdlib
+    %cowboy
    ]},
   {env,[]},
   {modules, []},
