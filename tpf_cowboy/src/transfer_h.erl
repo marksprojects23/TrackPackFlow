@@ -13,7 +13,17 @@ init(Req, State) ->
     Decoded_req_body_map = jiffy:decode(Req_body, [return_maps]),
     {ok, Location_id} = maps:find(<<"location_id">>, Decoded_req_body_map),
     {ok, Package_id} = maps:find(<<"package_id">>, Decoded_req_body_map),
-    io:format(Package_id),
+    fun(Package_id) ->
+        if
+            is_atom(Package_id) -> 
+                io:format("Var is an atom~n");
+            is_binary(Package_id) ->
+                io:format("Var is a binary~n");
+            is_list(Package_id) ->
+                io:format("Var is a list (possibly a string)~n");
+            true -> 
+                io:format("Var is of another type~n")
+end end,
     SelfPid = self(),
     erpc:call('storer@business.tpf.markcuizon.com', gen_server, call, [{global, realstorer}, {storing_package, Package_id, Location_id}, infinity]),
     % erpc:call({realstorer, 'storer@business.tpf.markcuizon.com'}, data_service, store_package, [Package_id, Location_id, SelfPid]),
