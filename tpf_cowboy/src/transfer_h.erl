@@ -16,14 +16,16 @@ init(Req, State) ->
     (fun(Package_id) ->
         if
             is_atom(Package_id) -> 
-                io:format("Var is an atom~n");
+                io:format("Package_id is an atom~n");
             is_binary(Package_id) ->
-                io:format("Var is a binary~n");
+                io:format("Package_id is a binary~n");
             is_list(Package_id) ->
-                io:format("Var is a list (possibly a string)~n");
+                io:format("Package_id is a list (possibly a string)~n");
             true -> 
-                io:format("Var is of another type~n")
+                io:format("Package_id is of another type~n")
 end end)(Package_id),
+    io:format(Package_id,"~n"),
+    io:format(Location_id,"~n"),
     SelfPid = self(),
     erpc:call('storer@business.tpf.markcuizon.com', gen_server, call, [{global, realstorer}, {storing_package, Package_id, Location_id}, infinity]),
     % erpc:call({realstorer, 'storer@business.tpf.markcuizon.com'}, data_service, store_package, [Package_id, Location_id, SelfPid]),
