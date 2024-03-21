@@ -47,7 +47,7 @@ start() ->
 %%--------------------------------------------------------------------
 -spec start(atom(),atom(),atom()) -> {ok, pid()} | ignore | {error, term()}.
 start(Registration_type,Name,Args) ->
-    {ok, _Pid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087),
+    % {ok, RiakPid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087),
     gen_server:start_link({Registration_type, Name}, ?MODULE, Args, []).
 
 

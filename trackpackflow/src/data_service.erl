@@ -6,7 +6,8 @@ store_package(Package_id, Location_id, Pid) when is_pid(Pid)->
     % Package_id = maps:get("Package_id",PackageLocation_map),
     % Location_id = maps:get("Location_id",PackageLocation_map),
     Object = riakc_obj:new(<<"packages">>, Package_id, Location_id),
-    riakc_pb_socket:put(Pid, Object);
+    {ok, RiakPid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087),
+    riakc_pb_socket:put(RiakPid, Object);
 % store_package(Package_id, Pid) when is_list(Package_id), is_pid(Pid), length(Package_id) >= 36->
 %     Object = riakc_obj:new(<<"packages">>, list_to_binary(Package_id), 0),
 %     riakc_pb_socket:put(Pid, Object);
