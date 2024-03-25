@@ -24,14 +24,14 @@ store_package(_, _, _Pid)->
     {fail, no_pid}.
 
 
-delivered_package("", Pid) when is_pid(Pid)->
-    {fail,empty_package};
-delivered_package(Package_id, Pid) when is_pid(Pid), is_list(Package_id), length(Package_id) < 36->
-     {fail, package_isnt_UUID};
-delivered_package(_, Pid) when is_pid(Pid)->
-    {fail, isnt_string};
-delivered_package(_, _Pid)->
-    {fail, no_pid};
+% delivered_package("", Pid) when is_pid(Pid)->
+%     {fail,empty_package};
+% delivered_package(Package_id, Pid) when is_pid(Pid), is_list(Package_id), length(Package_id) < 36->
+%      {fail, package_isnt_UUID};
+% delivered_package(_, Pid) when is_pid(Pid)->
+%     {fail, isnt_string};
+% delivered_package(_, _Pid)->
+%     {fail, no_pid};
 delivered_package(Package_id, Pid) ->
     store_package(Package_id, 0, Pid).
 
