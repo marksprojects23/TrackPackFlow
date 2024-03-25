@@ -36,27 +36,30 @@ delivered_package(Package_id, Pid) ->
     store_package(Package_id, 0, Pid).
 
 % If the location ID is an empty string, return a failure tuple indicating that the location is empty.
-update_location("", _, Pid) when is_pid(Pid)->
-    {fail,empty_location};
-% If the coordinates map is an empty string, return a failure tuple indicating that the coordinates map is empty.
-update_location(_, "", Pid) when is_pid(Pid)->
-    {fail, empty_coords_map};
-% If the location ID is a list and its length is less than 36 (not a UUID), return a failure tuple indicating that the location ID isn't a UUID.
-update_location(Location_id, _, Pid) when is_pid(Pid), is_list(Location_id), length(Location_id) < 36->
-     {fail, location_isnt_UUID};
+% update_location("", _, Pid) when is_pid(Pid)->
+%     {fail,empty_location};
+% % If the coordinates map is an empty string, return a failure tuple indicating that the coordinates map is empty.
+% update_location(_, "", Pid) when is_pid(Pid)->
+%     {fail, empty_coords_map};
+% % If the location ID is a list and its length is less than 36 (not a UUID), return a failure tuple indicating that the location ID isn't a UUID.
+% update_location(Location_id, _, Pid) when is_pid(Pid), is_list(Location_id), length(Location_id) < 36->
+%      {fail, location_isnt_UUID};
 
-% If the location ID or coordinates map is not a string, return a failure tuple indicating that the input isn't a string.
-update_location(_, _, Pid) when is_pid(Pid)->
-    {fail, isnt_string};
-% If the process ID is not a pid, return a failure tuple indicating that there's no process ID.
-update_location(_, _, _Pid)->
-    {fail, no_pid};
+% % If the location ID or coordinates map is not a string, return a failure tuple indicating that the input isn't a string.
+% update_location(_, _, Pid) when is_pid(Pid)->
+%     {fail, isnt_string};
+% % If the process ID is not a pid, return a failure tuple indicating that there's no process ID.
+% update_location(_, _, _Pid)->
+%     {fail, no_pid};
     
 % If all checks pass, create a new object with the location ID and coordinates map, and put it in the database.
-update_location(Location_id, Coords_map, Pid) ->
+update_location(Location_id, Coords_map, _Pid) ->
     % {Location_id,Coords} = maps:take("Location_id", LocationCoord_map),
-    Object = riakc_obj:new(<<"locations">>, list_to_binary(Location_id), term_to_binary(Coords_map)),
-    riakc_pb_socket:put(Pid, Object).
+    % Object = riakc_obj:new(<<"locations">>, list_to_binary(Location_id), term_to_binary(Coords_map)),
+    % riakc_pb_socket:put(Pid, Object).
+    Object = riakc_obj:new(<<"locations">>, Location_id, Coords_map),
+    {ok, RiakPid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087),
+    riakc_pb_socket:put(RiakPid, Object).
 
 get_location("", Pid) when is_pid(Pid)->
     {fail,empty_package};
