@@ -4,9 +4,27 @@
 -export([init/2]).
 
 init(Req, State) ->
-    % Package_id is in binary
-    {ok, Package_id, _End_req} = cowboy_req:read_body(Req),
-    % erpc:call('storer@business.tpf.markcuizon.com', data_service, store_package, {storing_package, Package_id, Location_id}),
-    % Result = erpc:call('storer@business.tpf.markcuizon.com', data_service, get_location, {storing_package, Package_id}),
+    %{
+    %  "package_id": _
+    %}
+    {ok, Req_body, _End_req} = cowboy_req:read_body(Req),
+    % Decode the JSON. Using option return_maps returns the JSON as an erlang map.
+    % Decoded_req_body_map = jiffy:decode(Req_body, [return_maps]),
+    % {ok, Package_id} = maps:find(<<"package_id">>, Decoded_req_body_map),
+    Test = fun(A) ->
+        if
+            is_atom(A) -> 
+                io:format("An atom was passed:~n");
+            is_binary(A) ->
+                io:format("A binary was passed:~n");
+            is_list(A) ->
+                io:format("A list was passed (possibly a string):~n");
+            true -> 
+                io:format("Whatever passed is of another type:~n")
+end end,
+    Test(Req_body),
+    io:format(Req_body),
+    io:format("~n"),
+    erpc:call('requester@business.tpf.markcuizon.com', gen_server, call, [{global, realrequester}, {getting_location, Req_body}, infinity]),
     Req2 = cowboy_req:reply(200, #{}, <<"Request Req">>, Req),
     {ok, Req2, State}.
