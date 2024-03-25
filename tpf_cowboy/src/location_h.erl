@@ -13,6 +13,6 @@ init(Req, State) ->
     {ok, Longitude} = maps:find(<<"longitude">>, Decoded_req_body_map),
 
     % cast(Node, Module, Function, Args) -> ok
-    erpc:cast('updater@business.tpf.markcuizon.com', gen_server, cast, [{global, realupdater}, {updating_package, Location_id, #{latitude => Latitude, longitude => Longitude}}]),
+    erpc:cast('updater@business.tpf.markcuizon.com', gen_server, cast, [{global, realupdater}, {updating_location, Location_id, #{latitude => Latitude, longitude => Longitude}}]),
 
     {ok, Req2, State}.
