@@ -75,8 +75,9 @@ get_location(Package_id, _Pid) ->
     % {ok, Location_object} = riakc_pb_socket:get(Pid, <<"locations">>, Location_id_binary),
     % binary_to_term(riakc_obj:get_value(Location_object)).
     {ok, Pid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087),
-    {ok, {_Atom1, _Bucket, _Key, _SomeBinary, [{_Tuple, Location_id}], _Atom2, _Atom3}} = riakc_pb_socket:get(Pid, <<"packages">>, Package_id),
-    {ok, {_Atom3, _Bucket, _Key, _SomeBinary, [{_Tuple, Coords_map}], _Atom, _atom}} = riakc_pb_socket:get(Pid, <<"locations">>, Location_id).
+    {ok, {_Atom, _Bucket, _Key, _SomeBinary, [{_Tuple, Location_id}], _Atom1, _Atom2}} = riakc_pb_socket:get(Pid, <<"packages">>, Package_id),
+    {ok, {_Atom3, _Bucket1, _Key1, _SomeBinary1, [{_Tuple1, Coords_map}], _Atom4, _Atom5}} = riakc_pb_socket:get(Pid, <<"locations">>, Location_id),
+    Coords_map.
 
     % {ok,{riakc_obj,<<"packages">>, <<"3a8b10bb-60f7-4d44-a324-802eb58e6da7">>, <<107,206,97,96,96,96,204,96,202,5,82,60,127,24,188,46,177,107,73,200,64,132,18,...>>,
     % [{{dict,2,16,16,8,80,48, {[],[],[],[],[],[],[],[],[],[],[],[],...}, {{[],[],[],[],[],[],[],[],[],[],...}}}, <<"7af55153-9549-4064-a199-0d50084429a7">>}],
