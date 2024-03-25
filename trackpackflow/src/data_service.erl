@@ -61,16 +61,23 @@ update_location(Location_id, Coords_map, _Pid) ->
     {ok, RiakPid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087),
     riakc_pb_socket:put(RiakPid, Object).
 
-get_location("", Pid) when is_pid(Pid)->
-    {fail,empty_package};
-get_location(Package_id, Pid) when is_pid(Pid), is_list(Package_id), length(Package_id) < 36->
-     {fail, package_isnt_UUID};
-get_location(_, Pid) when is_pid(Pid)->
-    {fail, isnt_string};
-get_location(_, _Pid)->
-    {fail, no_pid};
-get_location(Package_id, Pid) ->
-    {ok, Package_object} = riakc_pb_socket:get(Pid, <<"packages">>, list_to_binary(Package_id)),
-    Location_id_binary = riakc_obj:get_value(Package_object),
-    {ok, Location_object} = riakc_pb_socket:get(Pid, <<"locations">>, Location_id_binary),
-    binary_to_term(riakc_obj:get_value(Location_object)).
+% get_location("", Pid) when is_pid(Pid)->
+%     {fail,empty_package};
+% get_location(Package_id, Pid) when is_pid(Pid), is_list(Package_id), length(Package_id) < 36->
+%      {fail, package_isnt_UUID};
+% get_location(_, Pid) when is_pid(Pid)->
+%     {fail, isnt_string};
+% get_location(_, _Pid)->
+%     {fail, no_pid};
+get_location(Package_id, _Pid) ->
+    % {ok, Package_object} = riakc_pb_socket:get(Pid, <<"packages">>, list_to_binary(Package_id)),
+    % Location_id_binary = riakc_obj:get_value(Package_object),
+    % {ok, Location_object} = riakc_pb_socket:get(Pid, <<"locations">>, Location_id_binary),
+    % binary_to_term(riakc_obj:get_value(Location_object)).
+    {ok, Pid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087),
+    {ok, {_Atom1, _Bucket, _Key, _SomeBinary, [{_Tuple, Location_id}], _Atom2, _Atom3}} = riakc_pb_socket:get(Pid, <<"packages">>, Package_id),
+    {ok, {_Atom3, _Bucket, _Key, _SomeBinary, [{_Tuple, Coords_map}], _Atom, _atom}} = riakc_pb_socket:get(Pid, <<"locations">>, Location_id).
+
+    % {ok,{riakc_obj,<<"packages">>, <<"3a8b10bb-60f7-4d44-a324-802eb58e6da7">>, <<107,206,97,96,96,96,204,96,202,5,82,60,127,24,188,46,177,107,73,200,64,132,18,...>>,
+    % [{{dict,2,16,16,8,80,48, {[],[],[],[],[],[],[],[],[],[],[],[],...}, {{[],[],[],[],[],[],[],[],[],[],...}}}, <<"7af55153-9549-4064-a199-0d50084429a7">>}],
+    % undefined,undefined}}

@@ -94,8 +94,13 @@ init([]) ->
                                   {noreply, term(), integer()} |
                                   {stop, term(), term(), integer()} | 
                                   {stop, term(), term()}.
-handle_call(Request, From, State) ->
-        {reply,replace_started,State};
+handle_call({getting_location,Package_id}, _From, Db_PID) ->
+        case Package_id =:= ("") of
+            true ->
+                {reply,{fail,empty_key},Db_PID};
+            _ ->
+                {reply,data_service:get_location(Package_id,Db_PID),Db_PID}
+        end;
 handle_call(stop, _From, _State) ->
         {stop,normal,
                 replace_stopped,
