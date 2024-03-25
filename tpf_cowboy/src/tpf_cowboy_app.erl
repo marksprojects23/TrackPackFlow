@@ -15,7 +15,8 @@ start(_Type, _Args) ->
             {"/", hello_h, []},
             {"/package_transferred", transfer_h, []}, % this is an example on adding more pages to ur web app.
             {"/delivered", delivered_h, []},
-			{"/location_request", location_h, []}
+            {"/location_update", location_h, []},
+			{"/location_request", request_h, []}
         ]}
     ]),
 
