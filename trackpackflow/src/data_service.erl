@@ -46,7 +46,7 @@ get_location(Package_id, _Pid) ->
     
     case riakc_obj:get_value(Package) == <<0>> of
         false->{ok, Location} = riakc_pb_socket:get(Pid, <<"locations">>, riakc_obj:get_value(Package)),
-        io:format(riakc_obj:get_value(Location)),
+        % io:format(riakc_obj:get_value(Location)),
         riakc_obj:get_value(Location);  % Implementation according to Diego
         true->0
     end.
