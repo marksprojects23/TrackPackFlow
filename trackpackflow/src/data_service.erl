@@ -24,7 +24,7 @@ store_package(Package_id, Location_id, _Pid)->
 %     {fail, no_pid}.
 
 delivered_package(Package_id, Pid) ->
-    store_package(Package_id, <<0>>, Pid).
+    store_package(Package_id, <<"delivered">>, Pid).
     
 update_location(Location_id, Coords_map, _Pid) ->
     % {Location_id,Coords} = maps:take("Location_id", LocationCoord_map),
@@ -44,15 +44,22 @@ get_location(Package_id, _Pid) ->
     % {ok, {_Atom3, _Bucket1, _Key1, _SomeBinary1, [{_Tuple1, Coords_map}], _Atom4, _Atom5}} = riakc_pb_socket:get(Pid, <<"locations">>, Location_id),
     {ok, Package} = riakc_pb_socket:get(Pid, <<"packages">>, Package_id),
     
-    case riakc_obj:get_value(Package) == <<0>> of
-        false->{ok, Location} = riakc_pb_socket:get(Pid, <<"locations">>, riakc_obj:get_value(Package)),
-        % io:format(riakc_obj:get_value(Location)),
-        riakc_obj:get_value(Location);  % Implementation according to Diego
-        true->0
-    end.
+    % case riakc_obj:get_value(Package) == <<0>> of
+    %     false->{ok, Location} = riakc_pb_socket:get(Pid, <<"locations">>, riakc_obj:get_value(Package)),
+    %     % io:format(riakc_obj:get_value(Location)),
+    %     riakc_obj:get_value(Location);  % Implementation according to Diego
+    %     true-><<"it's delivered">>
+    % end.
+
+    case riakc_obj:get_value(Package) of
+        <<"delivered">> -> <<"{latitude: 0, longitude: 0}">>;
+        Location_id -> 
+            Location = riakc_pb_socket:get(Pid, <<"locations">>, Location_id),
+            riakc_obj:get_value(Location)
+        end.
+        
     
     % {ok, Location} = riakc_pb_socket:get(Pid, <<"locations">>, riakc_obj:get_value(Package)),
-    % io:format(riakc_obj:get_value(Location)),
     % riakc_obj:get_value(Location).      % Implementation according to Diego
 
     % {ok,{riakc_obj,<<"packages">>, <<"3a8b10bb-60f7-4d44-a324-802eb58e6da7">>, <<107,206,97,96,96,96,204,96,202,5,82,60,127,24,188,46,177,107,73,200,64,132,18,...>>,

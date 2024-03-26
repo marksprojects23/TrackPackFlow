@@ -26,7 +26,7 @@ init(Req, State) ->
     io:format(Req_body),
     io:format("~n"),
     Coords_binary = erpc:call('requester@business.tpf.markcuizon.com', gen_server, call, [{global, realrequester}, {getting_location, Req_body}, infinity]),
-    % io:format(Coords_binary),
+    io:format(Coords_binary),
     Req2 = cowboy_req:reply(200, #{}, Coords_binary, Req),
     {ok, Req2, State}.
 
