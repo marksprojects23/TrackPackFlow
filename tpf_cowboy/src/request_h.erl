@@ -28,3 +28,8 @@ init(Req, State) ->
     erpc:call('requester@business.tpf.markcuizon.com', gen_server, call, [{global, realrequester}, {getting_location, Req_body}, infinity]),
     Req2 = cowboy_req:reply(200, #{}, <<"Request Req">>, Req),
     {ok, Req2, State}.
+
+% curl -X POST \
+%      -H "Content-Type: test/plain" \
+%      -d '18ebb5ce-3b50-4408-9599-934b7a469dd5' \
+%      https://cowboy.tpf.markcuizon.com/location_request
