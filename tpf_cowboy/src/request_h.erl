@@ -21,7 +21,7 @@ init(Req, State) ->
                 io:format("A list was passed (possibly a string):~n");
             true -> 
                 io:format("Whatever passed is of another type:~n")
-end end,
+    end end,
     Test(Req_body),
     io:format(Req_body),
     io:format("~n"),
