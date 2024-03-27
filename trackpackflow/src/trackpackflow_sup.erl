@@ -31,12 +31,12 @@ init([]) ->
                  period => 1},
                  % Node names: requester, storer, updater
     ChildSpecs = [
-        #{id => requester,
-          start => {package_request, start_link, []}},
-        #{id => storer,
-          start => {package_storer, start_link, []}},
-        #{id => updater,
-          start => {location_updater, start_link, []}}
+        #{id => 'requester@business.tpf.markcuizon.com',
+          start => {package_request, start, [global, realrequester, []]}},
+        #{id => 'storer@business.tpf.markcuizon.com',
+          start => {package_storer, start, [global, realstorer, []]}},
+        #{id => 'updater@business.tpf.markcuizon.com',
+          start => {location_updater, start, [global, realupdater, []]}}
     ],
     {ok, {SupFlags, ChildSpecs}}.
 
