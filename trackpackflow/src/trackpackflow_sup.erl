@@ -38,7 +38,7 @@ init([]) ->
         #{id => package_storer,
           start => {package_storer, start, [global, realstorer, []]}},
         #{id => location_updater,
-          start => {location_updater, start, [global, realupdater, [Pid]]}}
+          start => {location_updater, start, [local, realupdater, [Pid]]}}
     ],
     {ok, {SupFlags, ChildSpecs}}.
 
