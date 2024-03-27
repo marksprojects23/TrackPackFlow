@@ -31,11 +31,12 @@ init([]) ->
                  period => 1},
                  % Node names: requester, storer, updater
     ChildSpecs = [
-        #{id => 'requester@business.tpf.markcuizon.com',
+        #{id => package_request,
           start => {package_request, start, [global, realrequester, []]}},
-        #{id => 'storer@business.tpf.markcuizon.com',
+        % erpc:cast('tpf@business.tpf.markcuizon.com', gen_server, cast, [{global, realupdater}, {updating_location, Location_id, Req_body}]),
+        #{id => package_storer,
           start => {package_storer, start, [global, realstorer, []]}},
-        #{id => 'updater@business.tpf.markcuizon.com',
+        #{id => location_updater,
           start => {location_updater, start, [global, realupdater, []]}}
     ],
     {ok, {SupFlags, ChildSpecs}}.

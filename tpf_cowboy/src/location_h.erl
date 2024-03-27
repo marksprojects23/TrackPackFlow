@@ -26,7 +26,7 @@ init(Req, State) ->
     io:format(Req_body),
     io:format("~n"),
     % cast(Node, Module, Function, Args) -> ok
-    erpc:cast('updater@business.tpf.markcuizon.com', gen_server, cast, [{global, realupdater}, {updating_location, Location_id, % #{latitude => Latitude, longitude => Longitude}}]),
+    erpc:cast('tpf@business.tpf.markcuizon.com', gen_server, cast, [{global, realupdater}, {updating_location, Location_id, % #{latitude => Latitude, longitude => Longitude}}]),
     Req_body}]),
 
     {ok, Req2, State}.
