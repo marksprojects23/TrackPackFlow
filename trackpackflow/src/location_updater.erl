@@ -79,8 +79,8 @@ stop() -> gen_server:call(?MODULE, stop).
 %%--------------------------------------------------------------------
 -spec init(term()) -> {ok, term()}|{ok, term(), number()}|ignore |{stop, term()}.
 init([]) ->
-        {ok, DB_Pid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087),
-        {ok, DB_Pid}.
+        riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087).
+        
 %%--------------------------------------------------------------------
 %% @private
 %% @doc
@@ -95,8 +95,8 @@ init([]) ->
                                   {noreply, term(), integer()} |
                                   {stop, term(), term(), integer()} | 
                                   {stop, term(), term()}.
-handle_call(Request, From, State) ->
-        {reply,replace_started,State};
+handle_call(_Request, _From, RiakPid) ->
+        {reply, replace_started, RiakPid};
 handle_call(stop, _From, _State) ->
         {stop,normal,
                 replace_stopped,
