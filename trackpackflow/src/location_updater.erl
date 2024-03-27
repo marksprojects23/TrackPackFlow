@@ -78,8 +78,8 @@ stop() -> gen_server:call(?MODULE, stop).
 %% @end
 %%--------------------------------------------------------------------
 -spec init(term()) -> {ok, term()}|{ok, term(), number()}|ignore |{stop, term()}.
-init([]) ->
-        {ok,replace_up}.
+init([DB_Pid]) ->
+        {ok,DB_Pid}.
 %%--------------------------------------------------------------------
 %% @private
 %% @doc
@@ -111,8 +111,8 @@ handle_call(stop, _From, _State) ->
 -spec handle_cast(Msg::term(), State::term()) -> {noreply, term()} |
                                   {noreply, term(), integer()} |
                                   {stop, term(), term()}.
-handle_cast({updating_location, Location_id, Coords_map, DB_Pid}, Pid) -> 
-    data_service:update_location(Location_id, Coords_map, DB_Pid),
+handle_cast({updating_location, Location_id, Coords_map}, Pid) -> 
+    data_service:update_location(Location_id, Coords_map, Pid),
     {noreply, Pid}.
     
 %%--------------------------------------------------------------------
