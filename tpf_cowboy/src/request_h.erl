@@ -25,10 +25,25 @@ init(Req, State) ->
     Test(Req_body),
     io:format(Req_body),
     io:format("~n"),
-    Coords_binary = erpc:call('tpf@business.tpf.markcuizon.com', gen_server, call, [{global, realrequester}, {getting_location, Req_body}, infinity]),
-    io:format(Coords_binary),
-    Req2 = cowboy_req:reply(200, #{}, Coords_binary, Req),
-    {ok, Req2, State}.
+
+    case erpc:call('tpf@business.tpf.markcuizon.com', gen_server, call, [{global, realrequester}, {getting_location, Req_body}, infinity]) of
+        {error, What} ->
+            case What of
+                notfound -> 
+                    io:format("Package ID not found!"),
+                    Req2 = cowboy_req:reply(500, #{}, <<"Package not found!">>),
+                    {ok, Req2, State};
+                Else -> 
+                    io:format("Some error occurred..."),
+                    io:format(atom_to_list(Else)),
+                    Req2 = cowboy_req:reply(500, #{}, <<"Some internal server error has occurred!">>),
+                    {ok, Req2, State}
+            end;
+        Coords ->
+            io:format(Coords),
+            Req2 = cowboy_req:reply(200, #{}, Coords, Req),
+            {ok, Req2, State}
+        end.
 
 % curl -X POST \
 %      -H "Content-Type: test/plain" \
