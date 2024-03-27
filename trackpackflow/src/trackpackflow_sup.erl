@@ -26,11 +26,10 @@ start_link() ->
 %%                  type => worker(),       % optional
 %%                  modules => modules()}   % optional
 init([]) ->
-    {ok, Pid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087),
     SupFlags = #{strategy => one_for_one,
                  intensity => 0,
                  period => 1},
-                 % Node names: requester, storer, updater
+
     ChildSpecs = [
         #{id => package_request,
           start => {package_request, start, [global, realrequester, []]}},
@@ -38,7 +37,7 @@ init([]) ->
         #{id => package_storer,
           start => {package_storer, start, [global, realstorer, []]}},
         #{id => location_updater,
-          start => {location_updater, start, [global, realupdater, [Pid]]}}
+          start => {location_updater, start, [global, realupdater, []]}}
     ],
     {ok, {SupFlags, ChildSpecs}}.
 
