@@ -6,8 +6,12 @@ store_package(Package_id, Location_id, _Pid)->
     % Package_id = maps:get("Package_id",PackageLocation_map),
     % Location_id = maps:get("Location_id",PackageLocation_map),
     Object = riakc_obj:new(<<"packages">>, Package_id, Location_id),
-    {ok, RiakPid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087),
-    riakc_pb_socket:put(RiakPid, Object).
+
+    case riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087) of
+        {ok, RiakPid} -> riakc_pb_socket:put(RiakPid, Object);
+        Error -> Error
+    end.
+
 % store_package(Package_id, Pid) when is_list(Package_id), is_pid(Pid), length(Package_id) >= 36->
 %     Object = riakc_obj:new(<<"packages">>, list_to_binary(Package_id), 0),
 %     riakc_pb_socket:put(Pid, Object);
@@ -39,9 +43,9 @@ get_location(Package_id, _Pid) ->
     % Location_id_binary = riakc_obj:get_value(Package_object),
     % {ok, Location_object} = riakc_pb_socket:get(Pid, <<"locations">>, Location_id_binary),
     % binary_to_term(riakc_obj:get_value(Location_object)).
-    {ok, Pid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087),
     % {ok, {_Atom, _Bucket, _Key, _SomeBinary, [{_Tuple, Location_id}], _Atom1, _Atom2}} = riakc_pb_socket:get(Pid, <<"packages">>, Package_id),
     % {ok, {_Atom3, _Bucket1, _Key1, _SomeBinary1, [{_Tuple1, Coords_map}], _Atom4, _Atom5}} = riakc_pb_socket:get(Pid, <<"locations">>, Location_id),
+    % {ok, Pid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087)
     {ok, Package} = riakc_pb_socket:get(Pid, <<"packages">>, Package_id),
     
     % case riakc_obj:get_value(Package) == <<0>> of
@@ -52,7 +56,7 @@ get_location(Package_id, _Pid) ->
     % end.
 
     case riakc_obj:get_value(Package) of
-        <<"delivered">> -> <<"{latitude: 0, longitude: 0}">>;
+        <<"delivered">> -> <<"{lat: 0, long: 0}">>;
         Location_id -> 
             {ok, Location} = riakc_pb_socket:get(Pid, <<"locations">>, Location_id),
             riakc_obj:get_value(Location)
