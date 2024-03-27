@@ -10,14 +10,13 @@
 -export([start/2, stop/1]).
 
 start(_Type, _Args) ->
-    {ok, Pid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087),
     Dispatch = cowboy_router:compile([
         {'_', [
             {"/", hello_h, []},
-            {"/package_transferred", transfer_h, [Pid]}, % this is an example on adding more pages to ur web app.
-            {"/delivered", delivered_h, [Pid]},
-            {"/location_update", location_h, [Pid]},
-			{"/location_request", request_h, [Pid]}
+            {"/package_transferred", transfer_h, []}, % this is an example on adding more pages to ur web app.
+            {"/delivered", delivered_h, []},
+            {"/location_update", location_h, []},
+			{"/location_request", request_h, []}
         ]}
     ]),
 
