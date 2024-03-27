@@ -26,10 +26,18 @@ start_link() ->
 %%                  type => worker(),       % optional
 %%                  modules => modules()}   % optional
 init([]) ->
-    SupFlags = #{strategy => one_for_all,
+    SupFlags = #{strategy => one_for_one,
                  intensity => 0,
                  period => 1},
-    ChildSpecs = [],
+                 % Node names: requester, storer, updater
+    ChildSpecs = [
+        #{id => requester,
+          start => {package_request, start_link, []}},
+        #{id => storer,
+          start => {package_storer, start_link, []}},
+        #{id => updater,
+          start => {location_updater, start_link, []}}
+    ],
     {ok, {SupFlags, ChildSpecs}}.
 
 %% internal functions
