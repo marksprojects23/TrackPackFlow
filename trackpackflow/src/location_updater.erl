@@ -111,8 +111,8 @@ handle_call(stop, _From, _State) ->
 -spec handle_cast(Msg::term(), State::term()) -> {noreply, term()} |
                                   {noreply, term(), integer()} |
                                   {stop, term(), term()}.
-handle_cast({updating_location, Location_id, Coords_map}, Pid) -> 
-    data_service:update_location(Location_id, Coords_map, Pid),
+handle_cast({updating_location, Location_id, Coords_map, DB_Pid}, Pid) -> 
+    data_service:update_location(Location_id, Coords_map, DB_Pid),
     {noreply, Pid}.
     
 %%--------------------------------------------------------------------
