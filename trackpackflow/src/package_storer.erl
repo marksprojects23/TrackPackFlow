@@ -32,7 +32,6 @@
 %%--------------------------------------------------------------------
 -spec start() -> {ok, pid()} | ignore | {error, term()}.
 start() ->
-    {ok, _Pid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087),
     gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 %%--------------------------------------------------------------------
 %% @doc
@@ -47,7 +46,6 @@ start() ->
 %%--------------------------------------------------------------------
 -spec start(atom(),atom(),atom()) -> {ok, pid()} | ignore | {error, term()}.
 start(Registration_type,Name,Args) ->
-    % {ok, RiakPid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087),
     gen_server:start_link({Registration_type, Name}, ?MODULE, Args, []).
 
 
@@ -75,7 +73,7 @@ stop() -> gen_server:call(?MODULE, stop).
 %%--------------------------------------------------------------------
 -spec init(term()) -> {ok, term()}|{ok, term(), number()}|ignore |{stop, term()}.
 init([]) ->
-        {ok,replace_up}.
+    riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087).
 %%--------------------------------------------------------------------
 %% @private
 %% @doc

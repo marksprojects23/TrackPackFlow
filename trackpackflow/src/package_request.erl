@@ -79,7 +79,7 @@ stop() -> gen_server:call(?MODULE, stop).
 %%--------------------------------------------------------------------
 -spec init(term()) -> {ok, term()}|{ok, term(), number()}|ignore |{stop, term()}.
 init([]) ->
-        {ok,replace_up}.
+    riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087).
 %%--------------------------------------------------------------------
 %% @private
 %% @doc
