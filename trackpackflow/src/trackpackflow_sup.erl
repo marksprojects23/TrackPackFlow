@@ -14,7 +14,7 @@
 -define(SERVER, ?MODULE).
 
 start_link() ->
-    supervisor:start_link({local, ?SERVER}, ?MODULE, [{ok, Pid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087)]).
+    supervisor:start_link({local, ?SERVER}, ?MODULE, []).
 
 %% sup_flags() = #{strategy => strategy(),         % optional
 %%                 intensity => non_neg_integer(), % optional
@@ -25,7 +25,8 @@ start_link() ->
 %%                  shutdown => shutdown(), % optional
 %%                  type => worker(),       % optional
 %%                  modules => modules()}   % optional
-init([{_,Pid}]) ->
+init([]) ->
+    {ok, Pid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087),
     SupFlags = #{strategy => one_for_one,
                  intensity => 0,
                  period => 1},
