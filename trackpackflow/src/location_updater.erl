@@ -112,7 +112,7 @@ handle_call(stop, _From, _State) ->
                                   {noreply, term(), integer()} |
                                   {stop, term(), term()}.
 handle_cast({updating_location, Location_id, Coords_map}, Pid) -> 
-    data_service:update_location(Location_id, Coords_map),
+    data_service:update_location(Location_id, Coords_map, Pid),
     {noreply, Pid}.
     
 %%--------------------------------------------------------------------
