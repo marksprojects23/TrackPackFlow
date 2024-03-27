@@ -30,15 +30,15 @@ store_package(Package_id, Location_id, _Pid)->
 delivered_package(Package_id, Pid) ->
     store_package(Package_id, <<"delivered">>, Pid).
     
-update_location(Location_id, Coords_map, _Pid) ->
+update_location(Location_id, Coords_map, Pid) ->
     % {Location_id,Coords} = maps:take("Location_id", LocationCoord_map),
     % Object = riakc_obj:new(<<"locations">>, list_to_binary(Location_id), term_to_binary(Coords_map)),
     % riakc_pb_socket:put(Pid, Object).
     Object = riakc_obj:new(<<"locations">>, Location_id, Coords_map),
-    {ok, RiakPid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087),
-    riakc_pb_socket:put(RiakPid, Object).
+    % {ok, RiakPid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087),
+    riakc_pb_socket:put(Pid, Object).
 
-get_location(Package_id, _Pid) ->
+get_location(Package_id, Pid) ->
     % {ok, Package_object} = riakc_pb_socket:get(Pid, <<"packages">>, list_to_binary(Package_id)),
     % Location_id_binary = riakc_obj:get_value(Package_object),
     % {ok, Location_object} = riakc_pb_socket:get(Pid, <<"locations">>, Location_id_binary),
