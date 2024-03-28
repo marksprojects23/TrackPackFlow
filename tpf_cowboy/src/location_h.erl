@@ -5,7 +5,8 @@
 
 init(Req, State) ->
     {ok, Req_body, _End_req} = cowboy_req:read_body(Req),
-    
+    io:format("Initial request: "),
+    io:format(Req_body),
     Decoded_req_body_map = jiffy:decode(Req_body, [return_maps]),
     {ok, Location_id} = maps:find(<<"location_id">>, Decoded_req_body_map),
     % {ok, Latitude} = maps:find(<<"latitude">>, Decoded_req_body_map),
