@@ -5,7 +5,18 @@
 store_package(Package_id, Location_id, RiakPid)->
     % Package_id = maps:get("Package_id",PackageLocation_map),
     % Location_id = maps:get("Location_id",PackageLocation_map),
-    io:format("Package ID: "),
+    Test = fun(A) ->
+        if
+            is_atom(A) -> 
+                io:format("An atom was passed:~n");
+            is_binary(A) ->
+                io:format("A binary was passed:~n");
+            is_list(A) ->
+                io:format("A list was passed (possibly a string):~n");
+            true -> 
+                io:format("Whatever passed is of another type:~n")
+end end,
+    Test(Package_id),
     io:format(Package_id),
     io:format("~n"),
     Object = riakc_obj:new(<<"packages">>, Package_id, Location_id),
