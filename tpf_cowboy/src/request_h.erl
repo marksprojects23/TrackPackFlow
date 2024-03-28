@@ -31,19 +31,19 @@ init(Req, State) ->
             case What of
                 notfound -> 
                     io:format("Package ID not found!"),
-                    Req2 = cowboy_req:reply(500, #{}, <<"Package not found!">>),
+                    Req2 = cowboy_req:reply(500, #{}, <<"Package not found!">>, Req),
                     {ok, Req2, State};
                 Else -> 
                     io:format("Some error occurred..."),
                     io:format(atom_to_list(Else)),
-                    Req2 = cowboy_req:reply(500, #{}, <<"Some internal server error has occurred!">>),
+                    Req2 = cowboy_req:reply(500, #{}, <<"Some internal server error has occurred!">>, Req),
                     {ok, Req2, State}
             end;
         Coords ->
             io:format(Coords),
             Req2 = cowboy_req:reply(200, #{}, Coords, Req),
             {ok, Req2, State}
-        end.
+    end.
 
 % curl -X POST \
 %      -H "Content-Type: test/plain" \
