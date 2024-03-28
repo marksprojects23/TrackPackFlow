@@ -5,7 +5,7 @@
 
 init(Req, State) ->
     {ok, Req_body, _End_req} = cowboy_req:read_body(Req),
-
+    io:format(Req_body),
     Decoded_req_body_map = jiffy:decode(Req_body, [return_maps]),
     case is_map(Decoded_req_body_map) of
         true->
