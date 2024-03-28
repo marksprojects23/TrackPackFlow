@@ -53,7 +53,7 @@ get_location(Package_id, RiakPid) ->
     % {ok, Pid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087)
     case riakc_pb_socket:get(RiakPid, <<"packages">>, Package_id) of
         {error,notfound}->
-            {error, notfound};
+            <<"Package doesn't exist yet.">>;
         {ok, Package}->
     
     % case riakc_obj:get_value(Package) == <<0>> of
