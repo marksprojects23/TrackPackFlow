@@ -51,7 +51,7 @@ get_location(Package_id, RiakPid) ->
     case riakc_pb_socket:get(RiakPid, <<"packages">>, Package_id) of
         {ok, Package} ->
             case riakc_obj:get_value(Package) of
-                <<"delivered">> -> <<"Package is delivered.">>;
+                <<"delivered">> -> <<"{lat: 0, long: 0}">>;
                 Location_id -> 
                     {ok, Location} = riakc_pb_socket:get(RiakPid, <<"locations">>, Location_id),
                     riakc_obj:get_value(Location)

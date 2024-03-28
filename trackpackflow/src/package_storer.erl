@@ -89,13 +89,14 @@ init([]) ->
                                   {stop, term(), term(), integer()} | 
                                   {stop, term(), term()}.
 handle_call({storing_package, Package_id, Location_id}, _From, Db_PID) ->
-        case lists:any(fun(A)->A=="" end,[Package_id,Location_id]) of
-            true ->
-                {reply,{fail,empty_key},Db_PID};
-            _ ->
-                {reply,data_service:store_package(Package_id, Location_id, Db_PID),Db_PID}
-                %{reply,{ok,Package_id,Location_id},Db_PID}
-        end;
+    {reply,data_service:store_package(Package_id, Location_id, Db_PID),Db_PID};
+    % case lists:any(fun(A)->A=="" end,[Package_id,Location_id]) of
+        %     true ->
+        %         {reply,{fail,empty_key},Db_PID};
+        %     _ ->
+        %         {reply,data_service:store_package(Package_id, Location_id, Db_PID),Db_PID}
+        %         %{reply,{ok,Package_id,Location_id},Db_PID}
+        % end;
 
 handle_call({delivering_package,Package_id}, _From, Db_PID) ->
         case Package_id =:= ("") of
