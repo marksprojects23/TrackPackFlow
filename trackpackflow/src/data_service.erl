@@ -5,6 +5,9 @@
 store_package(Package_id, Location_id, RiakPid)->
     % Package_id = maps:get("Package_id",PackageLocation_map),
     % Location_id = maps:get("Location_id",PackageLocation_map),
+    io:format("Package ID: "),
+    io:format(Package_id),
+    io:format("~n"),
     Object = riakc_obj:new(<<"packages">>, Package_id, Location_id),
 
     riakc_pb_socket:put(RiakPid, Object).
