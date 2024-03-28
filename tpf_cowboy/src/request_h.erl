@@ -11,6 +11,7 @@ init(Req, State) ->
     % Decode the JSON. Using option return_maps returns the JSON as an erlang map.
     % Decoded_req_body_map = jiffy:decode(Req_body, [return_maps]),
     % {ok, Package_id} = maps:find(<<"package_id">>, Decoded_req_body_map),
+    Decoded_req_body_map = jiffy:decode(Req_body),
     Test = fun(A) ->
         if
             is_atom(A) -> 
@@ -22,10 +23,10 @@ init(Req, State) ->
             true -> 
                 io:format("Whatever passed is of another type:~n")
     end end,
-    Test(Req_body),
-    io:format(Req_body),
+    Test(Decoded_req_body_map),
+    io:format(Decoded_req_body_map),
     io:format("~n"),
-    Coords_binary = erpc:call('tpf@business.tpf.markcuizon.com', gen_server, call, [{global, realrequester}, {getting_location, Req_body}, infinity]),
+    Coords_binary = erpc:call('tpf@business.tpf.markcuizon.com', gen_server, call, [{global, realrequester}, {getting_location, Decoded_req_body_map}, infinity]),
     % io:format(Coords_binary),
     Req2 = cowboy_req:reply(200, #{}, Coords_binary, Req),
     {ok, Req2, State}.
