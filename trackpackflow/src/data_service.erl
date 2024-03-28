@@ -10,7 +10,7 @@ store_package(Package_id, Location_id, RiakPid)->
         {ok, _}->
             riakc_pb_socket:put(RiakPid, Object);
         _->
-            Object2 = riakc_obj:new(<<"locations">>, Location_id, "No coords yet"),
+            Object2 = riakc_obj:new(<<"locations">>, Location_id, <<"No coords yet">>),
             riakc_pb_socket:put(RiakPid, Object2),
             riakc_pb_socket:put(RiakPid, Object)
     end.
