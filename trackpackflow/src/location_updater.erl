@@ -79,8 +79,8 @@ stop() -> gen_server:call(?MODULE, stop).
 %%--------------------------------------------------------------------
 -spec init(term()) -> {ok, term()}|{ok, term(), number()}|ignore |{stop, term()}.
 init([]) ->
-        {ok, DB_Pid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087),
-        {ok, DB_Pid}.
+        {ok, Db_Pid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087),
+        {ok, Db_Pid}.
 %%--------------------------------------------------------------------
 %% @private
 %% @doc
@@ -112,9 +112,9 @@ handle_call(stop, _From, _State) ->
 -spec handle_cast(Msg::term(), State::term()) -> {noreply, term()} |
                                   {noreply, term(), integer()} |
                                   {stop, term(), term()}.
-handle_cast({updating_location, Location_id, Coords_map}, DB_Pid) -> 
-    data_service:update_location(Location_id, Coords_map, DB_Pid),
-    {noreply, DB_Pid}.
+handle_cast({updating_location, Location_id, Coords_map}, Db_Pid) -> 
+    data_service:update_location(Location_id, Coords_map, Db_Pid),
+    {noreply, Db_Pid}.
     
 %%--------------------------------------------------------------------
 %% @private

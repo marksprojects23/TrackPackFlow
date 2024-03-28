@@ -31,6 +31,6 @@ init(Req, State) ->
     {ok, Req2, State}.
 
 % curl -X POST \
-%      -H "Content-Type: test/plain" \
+%      -H "Content-Type: text/plain" \
 %      -d '18ebb5ce-3b50-4408-9599-934b7a469dd5' \
 %      https://cowboy.tpf.markcuizon.com/location_request
