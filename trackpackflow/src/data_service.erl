@@ -51,7 +51,10 @@ get_location(Package_id, RiakPid) ->
     % {ok, {_Atom, _Bucket, _Key, _SomeBinary, [{_Tuple, Location_id}], _Atom1, _Atom2}} = riakc_pb_socket:get(Pid, <<"packages">>, Package_id),
     % {ok, {_Atom3, _Bucket1, _Key1, _SomeBinary1, [{_Tuple1, Coords_map}], _Atom4, _Atom5}} = riakc_pb_socket:get(Pid, <<"locations">>, Location_id),
     % {ok, Pid} = riakc_pb_socket:start_link("riak01.tpf.markcuizon.com", 8087)
-    {ok, Package} = riakc_pb_socket:get(RiakPid, <<"packages">>, Package_id),
+    case riakc_pb_socket:get(RiakPid, <<"packages">>, Package_id) of
+        {error,notfound}->
+            {error, notfound};
+        {ok, Package}->
     
     % case riakc_obj:get_value(Package) == <<0>> of
     %     false->{ok, Location} = riakc_pb_socket:get(Pid, <<"locations">>, riakc_obj:get_value(Package)),
@@ -65,7 +68,8 @@ get_location(Package_id, RiakPid) ->
         Location_id -> 
             {ok, Location} = riakc_pb_socket:get(RiakPid, <<"locations">>, Location_id),
             riakc_obj:get_value(Location)
-        end.
+        end
+    end.
         
     
     % {ok, Location} = riakc_pb_socket:get(Pid, <<"locations">>, riakc_obj:get_value(Package)),

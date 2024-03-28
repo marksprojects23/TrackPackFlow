@@ -11,7 +11,7 @@ init(Req, State) ->
     {ok, Req_body, _End_req} = cowboy_req:read_body(Req),
     % Decode the JSON. Using option return_maps returns the JSON as an erlang map.
     Decoded_req_body_map = jiffy:decode(Req_body, [return_maps]),
-    case  maps:find(<<"location_id">>, Decoded_req_body_map) of
+    case maps:find(<<"location_id">>, Decoded_req_body_map) of
         {ok, Location_id}->
             {ok, Package_id} = maps:find(<<"package_id">>, Decoded_req_body_map),
             Test = fun(A) ->
