@@ -6,7 +6,16 @@ store_package(Package_id, Location_id, RiakPid)->
     % Package_id = maps:get("Package_id",PackageLocation_map),
     % Location_id = maps:get("Location_id",PackageLocation_map),
     Object = riakc_obj:new(<<"packages">>, Package_id, Location_id),
-    riakc_pb_socket:put(RiakPid, Object).
+    case riakc_pb_socket:get(RiakPid, <<"locations">>, Location_id) of
+        {ok, _}->
+            riakc_pb_socket:put(RiakPid, Object);
+        _->
+            Object2 = riakc_obj:new(<<"locations">>, Location_id, "No coords yet"),
+            riakc_pb_socket:put(RiakPid, Object2),
+            riakc_pb_socket:put(RiakPid, Object)
+    end.
+
+
 
 % store_package(Package_id, Pid) when is_list(Package_id), is_pid(Pid), length(Package_id) >= 36->
 %     Object = riakc_obj:new(<<"packages">>, list_to_binary(Package_id), 0),
