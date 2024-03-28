@@ -38,7 +38,7 @@ init(Req, State) ->
             % erpc:call('package_request@business.tpf.markcuizon.com', package_storer, handle_call, {storing_package, Package_id, Location_id}),
             Req2 = cowboy_req:reply(200, #{}, <<"Transfer_req">>, Req),
             {ok, Req2, State};
-        _->
+        {badmap,_}->
             {ok, Req, State}
         end.
     
