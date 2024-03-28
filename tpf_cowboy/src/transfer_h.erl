@@ -35,5 +35,5 @@ end end,
     % erpc:call({realstorer, 'storer@business.tpf.markcuizon.com'}, data_service, store_package, [Package_id, Location_id, SelfPid]),
     %io:format(A),
     % erpc:call('package_request@business.tpf.markcuizon.com', package_storer, handle_call, {storing_package, Package_id, Location_id}),
-    Req2 = cowboy_req:reply(200, #{}, <<"Transfer_req">>, Req),
+    Req2 = cowboy_req:reply(200, #{}, <<"Package transferred.">>, Req),
     {ok, Req2, State}.
