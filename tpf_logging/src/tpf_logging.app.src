@@ -5,7 +5,10 @@
   {mod, {tpf_logging_app, []}},
   {applications,
    [kernel,
-    stdlib
+    stdlib,
+    ranch,
+    cowboy,
+    ssl
    ]},
   {env,[]},
   {modules, []},
