@@ -68,7 +68,7 @@ get_location(Package_id, RiakPid) ->
         Location_id -> 
             {ok, Location} = riakc_pb_socket:get(RiakPid, <<"locations">>, Location_id),
             riakc_obj:get_value(Location)
-        end
+    end
     end.
         
     

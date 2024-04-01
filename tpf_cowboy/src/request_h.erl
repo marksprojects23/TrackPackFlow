@@ -28,8 +28,9 @@ init(Req, State) ->
     io:format("~n"),
     Coords_binary = erpc:call('tpf@business.tpf.markcuizon.com', gen_server, call, [{global, realrequester}, {getting_location, Decoded_req_body_map}, infinity]),
     % io:format(Coords_binary),
-    case Coords_binary == <<"Package doesn't exist yet.">> of
-        true->Req2 = cowboy_req:reply(500, #{}, <<"Package not found.">>, Req);
+    case Coords_binary of
+        <<"Package doesn't exist yet.">>->Req2 = cowboy_req:reply(500, #{}, <<"Package not found.">>, Req);
+        <<"No coords yet">>->Req2 = cowboy_req:reply(500, #{}, <<"Location not yet set.">>, Req);
         _->Req2 = cowboy_req:reply(200, #{}, Coords_binary, Req)
     end,
     % Req2 = cowboy_req:reply(200, #{}, Coords_binary, Req),
