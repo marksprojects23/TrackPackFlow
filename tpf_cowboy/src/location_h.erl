@@ -28,8 +28,8 @@ init(Req, State) ->
             % cast(Node, Module, Function, Args) -> ok
             erpc:cast('tpf@business.tpf.markcuizon.com', gen_server, cast, [{global, realupdater}, {updating_location, Location_id, % #{latitude => Latitude, longitude => Longitude}}]),
             Req_body}]),
-            Req2 = cowboy_req:reply(200, #{}, <<"Location Req">>, Req),
-            {ok, Req2, State};
+            % Req2 = cowboy_req:reply(200, #{}, <<"Location Req">>, Req),
+            {ok, Req, State};
         _->
             {ok, Req, State}
     end.
