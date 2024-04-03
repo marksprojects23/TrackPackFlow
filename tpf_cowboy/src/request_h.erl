@@ -12,20 +12,20 @@ init(Req, State) ->
     % Decoded_req_body_map = jiffy:decode(Req_body, [return_maps]),
     % {ok, Package_id} = maps:find(<<"package_id">>, Decoded_req_body_map),
     Decoded_req_body_map = jiffy:decode(Req_body),
-    Test = fun(A) ->
-        if
-            is_atom(A) -> 
-                io:format("An atom was passed:~n");
-            is_binary(A) ->
-                io:format("A binary was passed:~n");
-            is_list(A) ->
-                io:format("A list was passed (possibly a string):~n");
-            true -> 
-                io:format("Whatever passed is of another type:~n")
-    end end,
-    Test(Decoded_req_body_map),
-    io:format(Decoded_req_body_map),
-    io:format("~n"),
+    % Test = fun(A) ->
+    %     if
+    %         is_atom(A) -> 
+    %             io:format("An atom was passed:~n");
+    %         is_binary(A) ->
+    %             io:format("A binary was passed:~n");
+    %         is_list(A) ->
+    %             io:format("A list was passed (possibly a string):~n");
+    %         true -> 
+    %             io:format("Whatever passed is of another type:~n")
+    % end end,
+    % Test(Decoded_req_body_map),
+    % io:format(Decoded_req_body_map),
+    % io:format("~n"),
     Coords_binary = erpc:call('tpf@business.tpf.markcuizon.com', gen_server, call, [{global, realrequester}, {getting_location, Decoded_req_body_map}, infinity]),
     % io:format(Coords_binary),
     case Coords_binary of
