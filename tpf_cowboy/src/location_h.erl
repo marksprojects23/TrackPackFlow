@@ -11,8 +11,9 @@ init(Req, State) ->
             {ok, Location_id} = maps:find(<<"location_id">>, Decoded_req_body_map),
             erpc:cast('tpf@business.tpf.markcuizon.com', gen_server, cast, [{global, realupdater}, {updating_location, Location_id,
             Req_body}]),
-            
-            {ok, Req, State};
+            Req2 = cowboy_req:reply(200, #{}, <<"Update_req">>, Req),
+            {ok, Req2, State};
+            % {ok, Req, State};
         _->
             {ok, Req, State}
     end.
